@@ -2,7 +2,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:tflite/tflite.dart';
+import 'package:tflite_v2/tflite_v2.dart';
 
 import '../utils/constants.dart';
 
@@ -20,23 +20,37 @@ class Recognizer {
   Future loadModel() {
     Tflite.close();
     return Tflite.loadModel(
-      model: "assets/model/baybayin_model.tflite",
-      labels: "assets/model/labels.txt",
+      model: "assets/baybayin_model2.tflite",
+      labels: "assets/labels.txt",
     );
   }
 
-  Future recognize(List<Offset?> points) async {
-    final picture = pointsToPicture(points);
-    Uint8List bytes =
-        await _imageToByteListUint8(picture, Constants.baybayinImageSize);
-    return _predict(bytes);
+  dispose() {
+    Tflite.close();
   }
 
-  Future _predict(Uint8List bytes) async {
+  Future<Uint8List> previewImage(List<Offset?> points) async {
+    final picture = _pointsToPicture(points);
+    final image = await picture.toImage(
+        Constants.baybayinImageSize, Constants.baybayinImageSize);
+    var pngBytes = await image.toByteData(format: ImageByteFormat.png);
+
+    return pngBytes!.buffer.asUint8List();
+  }
+
+  Future recognize(List<Offset?> points) async {
+    // print("Points: $points");
+    final picture = _pointsToPicture(points);
+    Uint8List bytes =
+        await _imageToByteListUint8(picture, Constants.baybayinImageSize);
     return Tflite.runModelOnBinary(binary: bytes);
   }
 
-  Picture pointsToPicture(List<Offset?> points) {
+  // Future _predict(Uint8List bytes) async {
+  //   return Tflite.runModelOnBinary(binary: bytes);
+  // }
+
+  Picture _pointsToPicture(List<Offset?> points) {
     final recorder = PictureRecorder();
     final canvas = Canvas(recorder, _canvasCullRect)
       ..scale(Constants.baybayinImageSize / Constants.imageSize);
@@ -46,7 +60,9 @@ class Recognizer {
         _bgPaint);
 
     for (int i = 0; i < points.length - 1; i++) {
-      canvas.drawLine(points[i]!, points[i + 1]!, _whitePaint);
+      if (points[i] != null && points[i + 1] != null) {
+        canvas.drawLine(points[i]!, points[i + 1]!, _whitePaint);
+      }
     }
 
     return recorder.endRecording();

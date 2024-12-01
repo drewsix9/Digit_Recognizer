@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import '../services/recognizer.dart';
@@ -14,6 +16,8 @@ class DrawScreen extends StatefulWidget {
 class _DrawScreenState extends State<DrawScreen> {
   final List<Offset?> _points = [];
   final _recognizer = Recognizer();
+  final _prediction = [];
+  bool initialized = false;
 
   @override
   void initState() {
@@ -25,27 +29,39 @@ class _DrawScreenState extends State<DrawScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        foregroundColor: Colors.white,
         title: const Text(
           'Baybayin Character Recognizer',
         ),
       ),
       body: Column(
         children: [
-          const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          const SizedBox(
+            height: 50,
+          ),
+          Row(
             children: [
-              Center(
-                child: Text(
-                  'Draw a Baybayin character here',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              const Expanded(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Draw a Baybayin character here',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w700),
+                      ),
+                      Text(
+                        'The model will predict the character you drew',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              Center(
-                child: Text(
-                  'The model will predict the character you drew',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
+              _imagePreviewWidget(),
             ],
           ),
           const SizedBox(height: 20),
@@ -65,6 +81,7 @@ class _DrawScreenState extends State<DrawScreen> {
                     localPosition.dy >= 0 &&
                     localPosition.dx <= Constants.canvasSize &&
                     localPosition.dy <= Constants.canvasSize) {
+                  print(localPosition);
                   setState(() {
                     _points.add(localPosition);
                   });
@@ -92,13 +109,38 @@ class _DrawScreenState extends State<DrawScreen> {
     );
   }
 
+  Widget _imagePreviewWidget() {
+    return Container(
+      width: 100,
+      height: 100,
+      color: Colors.black,
+      child: FutureBuilder(
+          future: _previewImage(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Image.memory(snapshot.data!);
+            } else {
+              return const Text('No Image');
+            }
+          }),
+    );
+  }
+
   void _initModel() async {
     var res = await _recognizer.loadModel();
     print(res);
   }
 
+  Future<Uint8List> _previewImage() async {
+    return await _recognizer.previewImage(_points);
+  }
+
   void _recognize() async {
     List<dynamic> pred = await _recognizer.recognize(_points);
-    print(pred.map((e) => e.toString()).join(', '));
+    print(pred);
+    _prediction;
+    setState(() {
+      // _prediction = pred.map((json) => Prediction.fromJson(json)).toList();
+    });
   }
 }
