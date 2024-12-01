@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.baybayin_character_recognition">
     <application
         android:label="baybayin_character_recognition"
         android:name="${applicationName}"
