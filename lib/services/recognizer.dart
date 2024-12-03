@@ -11,7 +11,7 @@ final _canvasCullRect = Rect.fromPoints(
 
 final _whitePaint = Paint()
   ..strokeCap = StrokeCap.round
-  ..color = Colors.white
+  ..color = Colors.black
   ..strokeWidth = Constants.strokeWidth;
 
 final _bgPaint = Paint()..color = Colors.white;
@@ -22,6 +22,8 @@ class Recognizer {
     return Tflite.loadModel(
       model: "assets/baybayin_model2.tflite",
       labels: "assets/labels.txt",
+      isAsset: true,
+      numThreads: 1,
     );
   }
 
@@ -39,21 +41,20 @@ class Recognizer {
   }
 
   Future recognize(List<Offset?> points) async {
-    // print("Points: $points");
     final picture = _pointsToPicture(points);
     Uint8List bytes =
         await _imageToByteListUint8(picture, Constants.baybayinImageSize);
-    return Tflite.runModelOnBinary(binary: bytes);
+    return _predict(bytes);
   }
 
-  // Future _predict(Uint8List bytes) async {
-  //   return Tflite.runModelOnBinary(binary: bytes);
-  // }
+  Future _predict(Uint8List bytes) async {
+    return Tflite.runModelOnBinary(binary: bytes, numResults: 63);
+  }
 
   Picture _pointsToPicture(List<Offset?> points) {
     final recorder = PictureRecorder();
     final canvas = Canvas(recorder, _canvasCullRect)
-      ..scale(Constants.baybayinImageSize / Constants.imageSize);
+      ..scale(Constants.baybayinImageSize / Constants.canvasSize);
 
     canvas.drawRect(
         Rect.fromLTWH(0, 0, Constants.imageSize, Constants.imageSize),
@@ -64,7 +65,6 @@ class Recognizer {
         canvas.drawLine(points[i]!, points[i + 1]!, _whitePaint);
       }
     }
-
     return recorder.endRecording();
   }
 

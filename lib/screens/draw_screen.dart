@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
+import '../models/prediction.dart';
 import '../services/recognizer.dart';
 import '../utils/constants.dart';
 import 'drawing_painter.dart';
@@ -16,13 +17,19 @@ class DrawScreen extends StatefulWidget {
 class _DrawScreenState extends State<DrawScreen> {
   final List<Offset?> _points = [];
   final _recognizer = Recognizer();
-  final _prediction = [];
+  var _prediction = [];
   bool initialized = false;
 
   @override
   void initState() {
     super.initState();
     _initModel();
+  }
+
+  @override
+  dispose() {
+    _recognizer.dispose();
+    super.dispose();
   }
 
   @override
@@ -51,7 +58,7 @@ class _DrawScreenState extends State<DrawScreen> {
                       Text(
                         'Draw a Baybayin character here',
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w700),
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         'The model will predict the character you drew',
@@ -118,9 +125,14 @@ class _DrawScreenState extends State<DrawScreen> {
           future: _previewImage(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return Image.memory(snapshot.data!);
+              return Image.memory(
+                snapshot.data!,
+                fit: BoxFit.fill,
+              );
             } else {
-              return const Text('No Image');
+              return const Center(
+                child: Text('Error'),
+              );
             }
           }),
     );
@@ -128,7 +140,6 @@ class _DrawScreenState extends State<DrawScreen> {
 
   void _initModel() async {
     var res = await _recognizer.loadModel();
-    print(res);
   }
 
   Future<Uint8List> _previewImage() async {
@@ -137,10 +148,8 @@ class _DrawScreenState extends State<DrawScreen> {
 
   void _recognize() async {
     List<dynamic> pred = await _recognizer.recognize(_points);
-    print(pred);
-    _prediction;
     setState(() {
-      // _prediction = pred.map((json) => Prediction.fromJson(json)).toList();
+      _prediction = pred.map((json) => Prediction.fromJson(json)).toList();
     });
   }
 }
