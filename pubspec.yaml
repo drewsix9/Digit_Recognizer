@@ -79,6 +79,11 @@ flutter:
     - family: Bagwis_Baybayin_font
       fonts:
         - asset: assets/fonts/Bagwis_Baybayin_font.ttf
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
+        - asset: assets/fonts/Roboto-Medium.ttf
+        - asset: assets/fonts/Roboto-Bold.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

@@ -43,6 +43,11 @@ class _DrawScreenState extends State<DrawScreen> {
         foregroundColor: Colors.white,
         title: const Text(
           'Baybayin Character Recognizer',
+          style: TextStyle(
+            fontFamily: 'Roboto',
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: Column(
@@ -58,11 +63,18 @@ class _DrawScreenState extends State<DrawScreen> {
                       Text(
                         'Draw a Baybayin character here',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
                       Text(
                         'The model will predict the character you drew',
-                        style: TextStyle(fontSize: 14),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w300,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),

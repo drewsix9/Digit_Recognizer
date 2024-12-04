@@ -9,27 +9,37 @@ class PredictionWidget extends StatelessWidget {
   final List<Prediction> predictions;
   const PredictionWidget({super.key, required this.predictions});
 
-  Widget _characterWidget(int index, Prediction? prediction, double fontSize) {
+  Widget _characterWidget(int index, Prediction? prediction, double labelSize,
+      double charFontSize, double predSize) {
     return Column(
       children: [
         Text(
           Baybayin.labels[index],
-          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontFamily: 'Roboto',
+            fontSize: labelSize,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         Text(
           Baybayin.characters[index],
           style: TextStyle(
-            fontSize: fontSize,
+            fontSize: charFontSize,
             fontWeight: FontWeight.bold,
             color: prediction == null
                 ? Colors.black
                 : Colors.red.withOpacity(
-                    (prediction.confidence * 2).clamp(0, 1).toDouble()),
+                    (prediction.confidence * 2).clamp(0, 1).toDouble(),
+                  ),
           ),
         ),
         Text(
           prediction == null ? '' : prediction.confidence.toStringAsFixed(2),
-          style: const TextStyle(fontSize: 12),
+          style: TextStyle(
+            fontFamily: 'Roboto',
+            fontSize: predSize,
+            fontWeight: FontWeight.w400,
+          ),
         ),
       ],
     );
@@ -57,7 +67,7 @@ class PredictionWidget extends StatelessWidget {
         Provider.of<PredictionProvider>(context, listen: false)
             .setLoading(false);
       });
-      return _characterWidget(predictions[0].index, predictions[0], 60);
+      return _characterWidget(predictions[0].index, predictions[0], 18, 60, 14);
     } else {
       Future.microtask(() {
         Provider.of<PredictionProvider>(context, listen: false)
@@ -65,10 +75,10 @@ class PredictionWidget extends StatelessWidget {
       });
       return Column(
         children: [
-          _characterWidget(predictions[0].index, predictions[0], 60),
+          _characterWidget(predictions[0].index, predictions[0], 18, 60, 14),
           const SizedBox(height: 20),
           SizedBox(
-            height: 100,
+            height: 120,
             child: ListView.separated(
               shrinkWrap: true,
               separatorBuilder: (context, index) => const SizedBox(width: 30),
@@ -76,7 +86,7 @@ class PredictionWidget extends StatelessWidget {
               itemCount: predictions.length - 1,
               itemBuilder: (context, index) {
                 return _characterWidget(predictions[index + 1].index,
-                    styles[predictions[index + 1].index], 45);
+                    styles[predictions[index + 1].index], 14, 45, 14);
               },
             ),
           ),
