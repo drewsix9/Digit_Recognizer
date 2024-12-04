@@ -70,14 +70,13 @@ class PredictionWidget extends StatelessWidget {
           SizedBox(
             height: 100,
             child: ListView.separated(
-              separatorBuilder: (context, index) => const SizedBox(width: 10),
+              shrinkWrap: true,
+              separatorBuilder: (context, index) => const SizedBox(width: 30),
               scrollDirection: Axis.horizontal,
-              itemCount: Baybayin.characters.length,
+              itemCount: predictions.length - 1,
               itemBuilder: (context, index) {
-                if (index == predictions[0].index) {
-                  return const SizedBox.shrink();
-                }
-                return _characterWidget(index, styles[index], 45);
+                return _characterWidget(predictions[index + 1].index,
+                    styles[predictions[index + 1].index], 45);
               },
             ),
           ),
