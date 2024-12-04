@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'provider/prediction_provider.dart';
 import 'screens/draw_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => PredictionProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -15,6 +23,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
+        progressIndicatorTheme: const ProgressIndicatorThemeData(
+          color: Colors.black,
+        ),
         appBarTheme: const AppBarTheme(
           color: Colors.black,
         ),

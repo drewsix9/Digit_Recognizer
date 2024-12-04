@@ -2,8 +2,10 @@ import 'dart:typed_data';
 
 import 'package:baybayin_character_recognition/screens/prediction_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/prediction.dart';
+import '../provider/prediction_provider.dart';
 import '../services/recognizer.dart';
 import '../utils/constants.dart';
 import 'drawing_painter.dart';
@@ -45,9 +47,6 @@ class _DrawScreenState extends State<DrawScreen> {
       ),
       body: Column(
         children: [
-          // const SizedBox(
-          //   height: 50,
-          // ),
           Row(
             children: [
               const Expanded(
@@ -72,7 +71,6 @@ class _DrawScreenState extends State<DrawScreen> {
               _imagePreviewWidget(),
             ],
           ),
-          // const SizedBox(height: 20),
           _drawCanvasWidget(),
           const SizedBox(
             height: 20,
@@ -80,13 +78,28 @@ class _DrawScreenState extends State<DrawScreen> {
           PredictionWidget(predictions: _prediction),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            _points.clear();
-          });
-        },
-        child: const Icon(Icons.clear, color: Colors.white),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              _recognize();
+            },
+            child: const Icon(Icons.save, color: Colors.white),
+          ),
+          const SizedBox(height: 10),
+          FloatingActionButton(
+            onPressed: () {
+              Provider.of<PredictionProvider>(context, listen: false)
+                  .setLoading(true);
+              setState(() {
+                _points.clear();
+                _prediction.clear();
+              });
+            },
+            child: const Icon(Icons.replay, color: Colors.white),
+          ),
+        ],
       ),
     );
   }
@@ -116,7 +129,6 @@ class _DrawScreenState extends State<DrawScreen> {
         },
         onPanEnd: (DragEndDetails details) {
           _points.add(null);
-          _recognize();
         },
         child: CustomPaint(
           painter: DrawingPainter(_points),
@@ -136,7 +148,7 @@ class _DrawScreenState extends State<DrawScreen> {
             if (snapshot.hasData) {
               return Image.memory(
                 snapshot.data!,
-                fit: BoxFit.fill,
+                fit: BoxFit.contain,
               );
             } else {
               return const Center(
@@ -148,7 +160,7 @@ class _DrawScreenState extends State<DrawScreen> {
   }
 
   void _initModel() async {
-    var res = await _recognizer.loadModel();
+    await _recognizer.loadModel();
   }
 
   Future<Uint8List> _previewImage() async {

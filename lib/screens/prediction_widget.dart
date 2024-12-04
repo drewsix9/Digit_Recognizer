@@ -1,7 +1,9 @@
 import 'package:baybayin_character_recognition/utils/baybayin.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/prediction.dart';
+import '../provider/prediction_provider.dart';
 
 class PredictionWidget extends StatelessWidget {
   final List<Prediction> predictions;
@@ -33,7 +35,7 @@ class PredictionWidget extends StatelessWidget {
     );
   }
 
-  List<dynamic> getPredictionStyles(List<Prediction> predictions) {
+  List<dynamic> _getPredictionStyles(List<Prediction> predictions) {
     List<dynamic> data = List.filled(63, null);
     for (var pred in predictions) {
       data[pred.index] = pred;
@@ -43,14 +45,24 @@ class PredictionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var styles = getPredictionStyles(predictions);
-    if (predictions.isEmpty) {
+    var isLoading = Provider.of<PredictionProvider>(context).isLoading;
+    var styles = _getPredictionStyles(predictions);
+
+    if (predictions.isEmpty && isLoading) {
       return const Center(
         child: CircularProgressIndicator(),
       );
     } else if (predictions.length == 1) {
+      Future.microtask(() {
+        Provider.of<PredictionProvider>(context, listen: false)
+            .setLoading(false);
+      });
       return _characterWidget(predictions[0].index, predictions[0], 60);
     } else {
+      Future.microtask(() {
+        Provider.of<PredictionProvider>(context, listen: false)
+            .setLoading(false);
+      });
       return Column(
         children: [
           _characterWidget(predictions[0].index, predictions[0], 60),
@@ -65,7 +77,7 @@ class PredictionWidget extends StatelessWidget {
                 if (index == predictions[0].index) {
                   return const SizedBox.shrink();
                 }
-                return _characterWidget(index, styles[index], 30);
+                return _characterWidget(index, styles[index], 45);
               },
             ),
           ),
