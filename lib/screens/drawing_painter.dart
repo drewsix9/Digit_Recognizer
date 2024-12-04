@@ -8,7 +8,8 @@ class DrawingPainter extends CustomPainter {
   final Paint _paint = Paint()
     ..strokeCap = StrokeCap.round
     ..color = Colors.black
-    ..strokeWidth = Constants.strokeWidth;
+    ..strokeWidth = Constants.strokeWidth
+    ..isAntiAlias = true;
 
   @override
   void paint(Canvas canvas, Size size) {
