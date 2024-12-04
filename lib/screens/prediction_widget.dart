@@ -14,7 +14,7 @@ class PredictionWidget extends StatelessWidget {
       children: [
         Text(
           Baybayin.labels[index],
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
         ),
         Text(
           Baybayin.characters[index],
