@@ -121,7 +121,6 @@ class _DrawScreenState extends State<DrawScreen> {
               localPosition.dy >= 0 &&
               localPosition.dx <= Constants.canvasSize &&
               localPosition.dy <= Constants.canvasSize) {
-            print(localPosition);
             setState(() {
               _points.add(localPosition);
             });
