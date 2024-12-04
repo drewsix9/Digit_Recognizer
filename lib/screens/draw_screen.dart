@@ -111,6 +111,7 @@ class _DrawScreenState extends State<DrawScreen> {
             },
             child: const Icon(Icons.replay, color: Colors.white),
           ),
+          const SizedBox(height: 40),
         ],
       ),
     );

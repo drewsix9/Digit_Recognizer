@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'provider/prediction_provider.dart';
@@ -6,6 +7,7 @@ import 'screens/draw_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   runApp(
     ChangeNotifierProvider(
       create: (context) => PredictionProvider(),
