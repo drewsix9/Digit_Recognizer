@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:baybayin_character_recognition/screens/prediction_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../models/prediction.dart';
@@ -17,7 +18,7 @@ class DrawScreen extends StatefulWidget {
 class _DrawScreenState extends State<DrawScreen> {
   final List<Offset?> _points = [];
   final _recognizer = Recognizer();
-  var _prediction = [];
+  List<Prediction> _prediction = [];
   bool initialized = false;
 
   @override
@@ -44,9 +45,9 @@ class _DrawScreenState extends State<DrawScreen> {
       ),
       body: Column(
         children: [
-          const SizedBox(
-            height: 50,
-          ),
+          // const SizedBox(
+          //   height: 50,
+          // ),
           Row(
             children: [
               const Expanded(
@@ -58,11 +59,11 @@ class _DrawScreenState extends State<DrawScreen> {
                       Text(
                         'Draw a Baybayin character here',
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         'The model will predict the character you drew',
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(fontSize: 14),
                       ),
                     ],
                   ),
@@ -71,38 +72,12 @@ class _DrawScreenState extends State<DrawScreen> {
               _imagePreviewWidget(),
             ],
           ),
-          const SizedBox(height: 20),
-          Container(
-            width: Constants.canvasSize + Constants.borderSize * 2,
-            height: Constants.canvasSize + Constants.borderSize * 2,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.black,
-                width: Constants.borderSize,
-              ),
-            ),
-            child: GestureDetector(
-              onPanUpdate: (DragUpdateDetails details) {
-                Offset localPosition = details.localPosition;
-                if (localPosition.dx >= 0 &&
-                    localPosition.dy >= 0 &&
-                    localPosition.dx <= Constants.canvasSize &&
-                    localPosition.dy <= Constants.canvasSize) {
-                  print(localPosition);
-                  setState(() {
-                    _points.add(localPosition);
-                  });
-                }
-              },
-              onPanEnd: (DragEndDetails details) {
-                _points.add(null);
-                _recognize();
-              },
-              child: CustomPaint(
-                painter: DrawingPainter(_points),
-              ),
-            ),
-          )
+          // const SizedBox(height: 20),
+          _drawCanvasWidget(),
+          const SizedBox(
+            height: 20,
+          ),
+          PredictionWidget(predictions: _prediction),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -112,6 +87,40 @@ class _DrawScreenState extends State<DrawScreen> {
           });
         },
         child: const Icon(Icons.clear, color: Colors.white),
+      ),
+    );
+  }
+
+  Widget _drawCanvasWidget() {
+    return Container(
+      width: Constants.canvasSize + Constants.borderSize * 2,
+      height: Constants.canvasSize + Constants.borderSize * 2,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.black,
+          width: Constants.borderSize,
+        ),
+      ),
+      child: GestureDetector(
+        onPanUpdate: (DragUpdateDetails details) {
+          Offset localPosition = details.localPosition;
+          if (localPosition.dx >= 0 &&
+              localPosition.dy >= 0 &&
+              localPosition.dx <= Constants.canvasSize &&
+              localPosition.dy <= Constants.canvasSize) {
+            print(localPosition);
+            setState(() {
+              _points.add(localPosition);
+            });
+          }
+        },
+        onPanEnd: (DragEndDetails details) {
+          _points.add(null);
+          _recognize();
+        },
+        child: CustomPaint(
+          painter: DrawingPainter(_points),
+        ),
       ),
     );
   }
@@ -148,6 +157,7 @@ class _DrawScreenState extends State<DrawScreen> {
 
   void _recognize() async {
     List<dynamic> pred = await _recognizer.recognize(_points);
+    print(pred);
     setState(() {
       _prediction = pred.map((json) => Prediction.fromJson(json)).toList();
     });

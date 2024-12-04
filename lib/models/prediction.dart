@@ -9,7 +9,7 @@ class Prediction {
     required this.label,
   });
 
-  factory Prediction.fromJson(Map<String?, dynamic> json) {
+  factory Prediction.fromJson(var json) {
     return Prediction(
       confidence: json['confidence'],
       index: json['index'],
