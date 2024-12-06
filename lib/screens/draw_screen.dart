@@ -94,6 +94,7 @@ class _DrawScreenState extends State<DrawScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           FloatingActionButton(
+            heroTag: 'saveButton',
             onPressed: () {
               _recognize();
             },
@@ -101,6 +102,7 @@ class _DrawScreenState extends State<DrawScreen> {
           ),
           const SizedBox(height: 10),
           FloatingActionButton(
+            heroTag: 'replayButton',
             onPressed: () {
               Provider.of<PredictionProvider>(context, listen: false)
                   .setLoading(true);

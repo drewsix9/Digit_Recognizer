@@ -1,9 +1,9 @@
+import 'package:baybayin_character_recognition/screens/splash_screen_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'provider/prediction_provider.dart';
-import 'screens/draw_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.black,
         ),
       ),
-      home: const DrawScreen(),
+      home: const SplashScreen2(),
     );
   }
 }
