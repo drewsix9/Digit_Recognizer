@@ -11,19 +11,17 @@ final _canvasCullRect = Rect.fromPoints(
 
 final _whitePaint = Paint()
   ..strokeCap = StrokeCap.round
-  ..color = Colors.black
+  ..color = Colors.white
   ..strokeWidth = Constants.strokeWidth;
 
-final _bgPaint = Paint()..color = Colors.white;
+final _bgPaint = Paint()..color = Colors.black;
 
 class Recognizer {
   Future loadModel() {
     Tflite.close();
     return Tflite.loadModel(
-      model: "assets/baybayin_model2.tflite",
-      labels: "assets/labels.txt",
-      isAsset: true,
-      numThreads: 1,
+      model: "assets/mnist.tflite",
+      labels: "assets/mnist.txt",
     );
   }
 

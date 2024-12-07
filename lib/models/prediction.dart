@@ -5,11 +5,8 @@ class Prediction {
   final int index;
   final String label;
 
-  Prediction({
-    required this.confidence,
-    required this.index,
-    required this.label,
-  });
+  Prediction(
+      {required this.confidence, required this.index, required this.label});
 
   static void prettyPrintMap(Map<String, dynamic> map) {
     const JsonEncoder encoder = JsonEncoder.withIndent('  ');
@@ -17,7 +14,7 @@ class Prediction {
     print(prettyPrint);
   }
 
-  factory Prediction.fromJson(var json) {
+  factory Prediction.fromJson(Map<dynamic, dynamic> json) {
     return Prediction(
       confidence: json['confidence'],
       index: json['index'],

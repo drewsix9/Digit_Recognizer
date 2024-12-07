@@ -1,5 +1,6 @@
-import 'package:baybayin_character_recognition/utils/constants.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/constants.dart';
 
 class DrawingPainter extends CustomPainter {
   final List<Offset?> points;

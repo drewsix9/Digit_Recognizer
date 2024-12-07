@@ -1,4 +1,4 @@
-package com.example.baybayin_character_recognition
+package com.digit_recognizer
 
 import io.flutter.embedding.android.FlutterActivity
 

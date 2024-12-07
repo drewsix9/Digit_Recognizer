@@ -62,10 +62,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    # - assets/baybayin_model.tflite
-    # - assets/baybayin_model2.tflite
     - assets/
-    - assets/splash_screen/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -79,9 +76,6 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Bagwis_Baybayin_font
-      fonts:
-        - asset: assets/fonts/Bagwis_Baybayin_font.ttf
     - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto-Regular.ttf
