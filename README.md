@@ -1,4 +1,4 @@
-# baybayin_character_recognition
+# digit_recognizer
 
 A new Flutter project.
 
