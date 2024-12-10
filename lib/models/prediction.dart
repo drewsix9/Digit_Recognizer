@@ -8,6 +8,7 @@ class Prediction {
   Prediction(
       {required this.confidence, required this.index, required this.label});
 
+  // Function to pretty print the map to the terminal
   static void prettyPrintMap(Map<String, dynamic> map) {
     const JsonEncoder encoder = JsonEncoder.withIndent('  ');
     String prettyPrint = encoder.convert(map);

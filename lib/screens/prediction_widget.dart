@@ -6,6 +6,7 @@ class PredictionWidget extends StatelessWidget {
   final List<Prediction> predictions;
   const PredictionWidget({super.key, required this.predictions});
 
+  // Function to display the number and its red opacity based on the confidence
   Widget _numberWidget(int num, Prediction? prediction) {
     return Column(
       children: <Widget>[
@@ -31,6 +32,7 @@ class PredictionWidget extends StatelessWidget {
     );
   }
 
+  // Function to get the prediction styles
   List<dynamic> getPredictionStyles(List<Prediction> predictions) {
     List<dynamic> data = List.filled(63, null);
     for (var pred in predictions) {
@@ -49,6 +51,7 @@ class PredictionWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            // Display the numbers 0 - 5 and their confidence
             _numberWidget(0, styles[0]),
             _numberWidget(1, styles[1]),
             _numberWidget(2, styles[2]),
@@ -64,6 +67,7 @@ class PredictionWidget extends StatelessWidget {
             const SizedBox(
               width: 60,
             ),
+            // Display the numbers 6 - 9 and their confidence
             _numberWidget(6, styles[6]),
             _numberWidget(7, styles[7]),
             _numberWidget(8, styles[8]),

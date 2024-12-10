@@ -17,6 +17,7 @@ final _whitePaint = Paint()
 final _bgPaint = Paint()..color = Colors.black;
 
 class Recognizer {
+  // MOST IMPORTANT FUNCTION, LOADS THE MODEL
   Future loadModel() {
     Tflite.close();
     return Tflite.loadModel(
@@ -25,6 +26,7 @@ class Recognizer {
     );
   }
 
+  // DISPOSES THE MODEL, for memory management
   dispose() {
     Tflite.close();
   }
@@ -45,6 +47,7 @@ class Recognizer {
     return _predict(bytes);
   }
 
+  // PREDICT FUNCTION, RUNS THE MODEL
   Future _predict(Uint8List bytes) async {
     return Tflite.runModelOnBinary(binary: bytes, numResults: 63);
   }

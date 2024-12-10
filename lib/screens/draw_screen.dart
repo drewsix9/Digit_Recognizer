@@ -16,20 +16,20 @@ class DrawScreen extends StatefulWidget {
 }
 
 class _DrawScreenState extends State<DrawScreen> {
-  final List<Offset?> _points = [];
-  final _recognizer = Recognizer();
-  List<Prediction> _prediction = [];
-  bool initialized = false;
+  final List<Offset?> _points = []; // List of points to draw the digit
+  final _recognizer =
+      Recognizer(); // Initialize the Recognizer class from services/recognizer.dart
+  List<Prediction> _prediction = []; // List of predictions
 
   @override
   void initState() {
     super.initState();
-    _initModel();
+    _initModel(); // Initialize the model
   }
 
   @override
   dispose() {
-    _recognizer.dispose();
+    _recognizer.dispose(); // Dispose the model (free up resources)
     super.dispose();
   }
 
@@ -62,13 +62,13 @@ class _DrawScreenState extends State<DrawScreen> {
                   ),
                 ),
               ),
-              _mnistPreviewImage(),
+              _mnistPreviewImage(), // Call the widget to display the preview image
             ],
           ),
           const SizedBox(
             height: 10,
           ),
-          _drawCanvasWidget(),
+          _drawCanvasWidget(), // Call the widget to draw the canvas
           const SizedBox(
             height: 10,
           ),
@@ -81,8 +81,8 @@ class _DrawScreenState extends State<DrawScreen> {
         child: const Icon(Icons.clear),
         onPressed: () {
           setState(() {
-            _points.clear();
-            _prediction.clear();
+            _points.clear(); // Clear the points
+            _prediction.clear(); // Clear the predictions
           });
         },
       ),
@@ -113,7 +113,7 @@ class _DrawScreenState extends State<DrawScreen> {
         },
         onPanEnd: (DragEndDetails details) {
           _points.add(null);
-          _recognize();
+          _recognize(); // THIS IS THE MAIN FUNCTION TO RECOGNIZE THE DIGIT
         },
         child: CustomPaint(
           painter: DrawingPainter(_points),
@@ -156,7 +156,7 @@ class _DrawScreenState extends State<DrawScreen> {
     List<dynamic> pred = await _recognizer.recognize(_points);
     setState(() {
       _prediction = pred.map((json) => Prediction.fromJson(json)).toList();
-      print('\nPrediction: ');
+      print('\nPrediction: '); // Print the prediction to the terminal
       for (var element in _prediction) {
         Prediction.prettyPrintMap(element.toMap());
       }
